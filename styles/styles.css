@@ -1,0 +1,18 @@
+#startBtn {
+    min-width: 35%;
+    display:block;
+    margin: auto;
+}
+
+#moreBtn {
+    display:block;
+    margin: auto;
+}
+
+h4 {
+    text-align: center;
+}
+
+#resultTxt {
+    text-align: center;
+}

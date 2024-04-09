@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 Second Assignment</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="/path/to/c3.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <h4>
+    Press the button after exactly 3 Seconds!
+  </h4>
+
+  <div>
+    <button id="startBtn" type="button" class="btn btn-secondary btn-lg">START</button>
+  </div>
+  
+  <p id="resultTxt"></p>
+
+  <div>
+    <button id="moreBtn" type="button" class="btn btn-outline-secondary btn-sm">More Info</button>
+  </div>
+
+  <div class="container" id="resultsData" style="display: none;">
+
+    <div class="resultsTable">
+        <h3>Attempts</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Elapsed Time</th>
+            </tr>
+            </thead>
+            <tbody id="attempts-slots">
+            
+            </tbody>
+        </table>
+    </div>
+
+    <div class="resultsStats">
+        <h3>Statistics</h3>
+        <p id="stats">Total Attempts: 0 | Min: 0 | Max: 0 | Avg: 0</p>
+    </div>
+
+    <div class="resultsGraph">
+        <h3>Graph</h3>
+        <div id="graph"></div>
+    </div>
+    <br>
+
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="/script.js"></script>
+  <script src="/path/to/d3.v5.min.js" charset="utf-8"></script>
+  <script src="/path/to/c3.min.js"></script>
+  <script type="text/javascript">
+    let startBtn = document.getElementById("startBtn");
+    let moreBtn = document.getElementById("moreBtn");
+    let resultsData = document.getElementById("resultsData");
+    let resultTxt = document.getElementById("resultTxt");
+    let attemptsSlots = document.getElementById("attempts-slots");
+    let stats = document.getElementById("stats");
+    let graph = document.getElementById("graph");
+    let start = Date();
+    let startTime = Date();
+    let end = Date();
+    let endTime = Date();
+    const secondstarget = 3;
+    let attempts = 0;
+    let max = 0;
+    let min = 100;
+    let sum = 0;
+    let times = ["Lap Time"];
+    let target = ["Target Time"];
+    
+    startBtn.addEventListener("click", function() {
+        if (startBtn.classList.contains("btn-secondary")) {
+            startBtn.classList.remove("btn-secondary");
+            startBtn.classList.add("btn-light");
+            startBtn.textContent = "STOP";
+            start = Date.now();
+            startTime = new Date();
+        } else {
+            startBtn.classList.remove("btn-light");
+            startBtn.classList.add("btn-secondary");
+            startBtn.textContent = "START";
+            end = Date.now();
+            endTime = new Date();
+            let millis = end - start;
+            if (Math.abs((millis / 1000) - secondstarget) <= 0.0) {
+                resultTxt.textContent = "You clicked the button after " + (millis / 1000) + " seconds.";
+                resultTxt.style.color = "DarkOliveGreen";
+            } else if (Math.abs((millis / 1000) - secondstarget) <= 0.2) {
+                resultTxt.textContent = "You clicked the button after " + (millis / 1000) + " seconds.";
+                resultTxt.style.color = "cornflowerBlue";
+            } else if (Math.abs((millis / 1000) - secondstarget) <= 0.5) {
+                resultTxt.textContent = "You clicked the button after " + (millis / 1000) + " seconds.";
+                resultTxt.style.color = "GoldenRod";
+            } else {
+                resultTxt.textContent = "You clicked the button after " + (millis / 1000) + " seconds.";
+                resultTxt.style.color = "red";
+            }
+            if (Math.abs((millis / 1000)) < min) {
+                min = Math.abs((millis / 1000));
+            }
+            if (Math.abs((millis / 1000)) > max) {
+                max = Math.abs((millis / 1000));
+            }
+            sum += Math.abs((millis / 1000));
+            attempts += 1;
+            stats.innerText = "Total Attempts: " + attempts + "  |  Min: " + min + "  |  Max: " + max + "  |  Avg: " + (sum / attempts);
+            let entry = `<tr>
+                <th scope="row">${attempts}</th>
+                <td>${startTime.getHours() + ":" + startTime.getMinutes() + ":" + startTime.getSeconds() + ":" + startTime.getMilliseconds()}</td>
+                <td>${endTime.getHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds() + ":" + endTime.getMilliseconds()}</td>
+                <td>${millis / 1000}</td>
+            </tr>`;
+            attemptsSlots.innerHTML += entry;
+            times.push(millis / 1000);
+            target.push(secondstarget);
+        }
+    });
+
+    moreBtn.addEventListener("click", function() {
+        if (resultsData.style.display === "none") {
+            resultsData.style.display = "block";
+            moreBtn.textContent = "Hide Info";
+        } else {
+            resultsData.style.display = "none";
+            moreBtn.textContent = "More Info";
+        }
+    });
+  </script>
+</body>
+
+</html>
